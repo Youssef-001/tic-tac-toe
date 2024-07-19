@@ -1,7 +1,16 @@
 function Game() {
     let gameBoard = [];
-    let players = [];
+    let players = [{name: 'X', score: 0}, {name: 'O', score: 0}];
     let gameBox = document.querySelector('.game-box');
+    let xStat = document.querySelector('.x');
+    let oStat = document.querySelector('.o');
+    let current = document.querySelector('.current');
+    let cells = document.querySelectorAll('.box-cell');
+
+    xScore = players[0].score;
+    oScore = players[1].score;
+
+
 
 
     function resetBoard(){
@@ -13,21 +22,26 @@ function Game() {
                 cell.innerHTML = '';
                 cell.style.backgroundColor = ''
             }
+            
         }
-    
-    
-    
+        cells.forEach((cell) => {
+            cell.classList.add('empty');
+        })
+
     }
 
         function addPlayer(name)
         {
-            players.push(name);
+            players.push({name, wins: 0});
         }
 
         function updateBoard(cell, symbol, element) // Draw board will only fire once, then just edit it
         {
             let {r,c} = cell;
            element.innerHTML = symbol
+        //    gameBoard[r][c] = symbol;
+
+       
         }
 
         
@@ -51,7 +65,8 @@ function Game() {
             {
                 if (gameBoard[0][i] === gameBoard[1][i] && gameBoard[1][i] === gameBoard[2][i] && gameBoard[0][i] === gameBoard[2][i] && gameBoard[0][i] !== 'S')
                 {
-                    return {winner: gameBoard[i][0],
+                    console.log(gameBoard[0][i]);
+                    return {winner: gameBoard[0][i],
                         c1: `0 ${i}`,
                         c2: `1 ${i}`,
                         c3: `2 ${i}`,
@@ -104,7 +119,7 @@ function Game() {
        function playRound(symbol, cell)
        {
         // First we need to check if the cell is already full
-        if (gameBoard[cell.r][cell.c]!= 'X' && gameBoard[cell.r][cell.c] != 'O' && gameBoard[cell.r][cell] != 'S')
+        if (gameBoard[cell.r][cell.c]!= 'X' && gameBoard[cell.r][cell.c] != 'O')
         {
         let {r,c } = cell;   
         gameBoard[r][c] = symbol;
@@ -117,10 +132,12 @@ function Game() {
        {
         gameOver = false;
         if (gameWinner == 'X'){
-            console.log(`Player ${players[0]} Won!!`);
+            console.log(`Player ${players[0].name} Won!!`);
+            players[0].wins++;
             gameOver = true;}
         else if (gameWinner == 'O'){
-            console.log(`Player ${players[1]} Won!!`);
+            console.log(`Player ${players[1].name} Won!!`);
+            players[1].wins++;
             gameOver = true;}
 
         else if (gameWinner == 'tie'){
@@ -131,9 +148,26 @@ function Game() {
        }
 
        let gameTurn = true; 
+
+
+       function displayTurn(currentTurn)
+       {
+        let currentPlayer = document.querySelector(".current");
+
+        if (currentTurn == true)
+            currentPlayer.innerHTML = 'Current Player: X';
+        else
+        currentPlayer.innerHTML = 'Current Player: O';
+       }
+
+
+    
+
        function playGame()
        {
         resetBoard();
+
+        
 
 
         let gameBox = document.querySelector('.game-box');
@@ -151,20 +185,24 @@ function Game() {
     
                 let currentTurn;
 
-
+                
                 
                 if (gameTurn == true)
                     currentTurn = 'X';
                 else
                     currentTurn = 'O';
-    
+
     
                     if(playRound(currentTurn, {r,c}) == true)
                         {gameTurn = !gameTurn;
+
                         updateBoard({r,c}, currentTurn, event.target);
+                        event.target.classList.remove('empty');
                         }
             
                     let gameWinner;
+                    displayTurn(gameTurn);
+
     
     
                 winnerObject = checkWinner();
@@ -174,11 +212,16 @@ function Game() {
                 if (isWin == 'X')
                 {
                     gameWinner = 'X';
+                    xScore++;
+                    xStat.innerHTML = `X: ${xScore}`;
                 }
     
                 else if (isWin == 'O')
                 {
                     gameWinner = 'O';
+                    oScore++;
+                    oStat.innerHTML = `O: ${oScore}`;
+
                 }
                 else if (isWin == 'tie')
                 {
@@ -205,6 +248,7 @@ function Game() {
                 cell1.style.backgroundColor = '#22c55e';
                 cell2.style.backgroundColor = '#22c55e';
                 cell3.style.backgroundColor = '#22c55e';
+                gameTurn = true;
             }
 
             else if (winnerObject.tie == 'tie')
@@ -212,16 +256,20 @@ function Game() {
                 console.log("It's a tie");
                 gameOver = true;
 
-                let cells = document.querySelectorAll('.box-cell');
                 cells.forEach(cell => {
                     cell.style.backgroundColor = '#f8717144'
                 });
+                gameTurn = true;
+
+
             }
 
             
     
     
             if (gameOver){
+                displayTurn(gameTurn);
+
                 gameBox.removeEventListener('click',capture)
             }
 
@@ -237,6 +285,12 @@ function Game() {
 
 
 
+let instance = Game();
+
+
+
+
+
 
 let restartButton = document.querySelector('.restart');
 
@@ -246,12 +300,15 @@ let startGameEvent = new Event('click');
 
 restartButton.dispatchEvent(startGameEvent);
 
+
+
 function startGame(event)
 {
+
     (function() {
-        let instance = Game();
-        instance.addPlayer(prompt("Enter player one name"));
-        instance.addPlayer(prompt("Enter player two name"));
+        // let instance = Game();
+        // instance.addPlayer(prompt("Enter player one name"));
+        // instance.addPlayer(prompt("Enter player two name"));
         instance.playGame();
     })();
 }

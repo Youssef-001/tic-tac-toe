@@ -1,8 +1,9 @@
 body,html{
     display:flex;
     justify-content: center;
-    align-content: center;
+    align-items: center;
     background-color: #1e293b;
+    flex-direction: column;
 }
 
 
@@ -18,13 +19,16 @@ body,html{
     font-size: 5rem;
     text-align: center;
     color: #f9fafb;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
 .game-box{
     height: 60vh;
-    width: 30vw;
-    margin-top: 6rem;
+    width: 34vw;
+    margin-top: 3rem;
 
 }
 
@@ -37,14 +41,47 @@ body,html{
     border-radius: 8px;
     grid-row: 3/-1;
     margin-top: 2rem;
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .content{
     display:grid;
-    grid-template-rows: 1fr auto 1fr;
+    grid-template-rows: auto auto 1fr;
 }
 
 .game-box{
     grid-row: 2/3;
+    
 }
 
+
+
+
+
+.name{
+    font-size: 4rem;
+    text-align: center;
+    color: #94a3b8;
+}
+
+.content{
+}
+
+.stats{
+    display: flex;
+    color: #94a3b8;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 1rem;
+
+    font-size: 1.5rem;
+
+}
+
+.empty:hover{
+
+    background-color: #94a3b833;
+
+}
